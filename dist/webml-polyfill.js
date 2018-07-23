@@ -4254,15 +4254,19 @@ var _RELU2 = __webpack_require__(380);
 
 var _RELU3 = __webpack_require__(381);
 
+var _fuse = __webpack_require__(100);
+
 var _softmax = __webpack_require__(382);
 
-var _fuse = __webpack_require__(100);
+var _softmax2 = _interopRequireDefault(_softmax);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 exports.RELU = _RELU.RELU;
 exports.RELU1 = _RELU2.RELU1;
 exports.RELU6 = _RELU3.RELU6;
 exports.fuse = _fuse.fuse;
-exports.softmax = _softmax.softmax;
+exports.softmax = _softmax2.default;
 
 /***/ }),
 /* 56 */
@@ -19347,6 +19351,7 @@ function GetSoftmaxAttrs(nnOperands, inputs, outputs) {
   var attrs = {
     inputs: [inputs[0]],
     outputs: outputs,
+    beta: nnOperands[inputs[1]].value[0],
     activation: 'softmax'
   };
   // console.log(attrs);
@@ -20796,7 +20801,11 @@ var RELU6 = exports.RELU6 = "#version 300 es\nprecision highp float;\nprecision 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-var softmax = exports.softmax = "#version 300 es\nprecision highp float;\nprecision highp sampler2D;\n\nin vec2 outTex;\nuniform sampler2D x;\nout vec4 outColor;\n\nvoid main() {\n  ivec2 size = textureSize(x, 0);\n  int out_x = int(float(size[0]) * outTex.x);\n  int out_y = int(float(size[1]) * outTex.y);\n\n  float maxval = 0.0;\n  for (int i = 0; i < int(size[0]); ++i) {\n    float val = texelFetch(x, ivec2(i, out_y), 0).r;\n    if (i == 0 || val > maxval) {\n      maxval = val;\n    }\n  }\n\n  float sum = 0.0;\n  for (int i = 0; i < int(size[0]); ++i) {\n    float val = texelFetch(x, ivec2(i, out_y), 0).r;\n    sum += exp(val - maxval);\n  }\n\n  outColor = exp(texture(x, vec2(outTex.x, outTex.y)) - maxval) / sum;\n}";
+exports.default = softmax;
+function softmax(beta) {
+  var source = "#version 300 es\n  precision highp float;\n  precision highp sampler2D;\n\n  in vec2 outTex;\n  uniform sampler2D x;\n  out vec4 outColor;\n\n  void main() {\n    ivec2 size = textureSize(x, 0);\n    int out_x = int(float(size[0]) * outTex.x);\n    int out_y = int(float(size[1]) * outTex.y);\n\n    float maxval = 0.0;\n    for (int i = 0; i < int(size[0]); ++i) {\n      float val = texelFetch(x, ivec2(i, out_y), 0).r;\n      if (i == 0 || val > maxval) {\n        maxval = val;\n      }\n    }\n\n    float sum = 0.0;\n    for (int i = 0; i < int(size[0]); ++i) {\n      float val = texelFetch(x, ivec2(i, out_y), 0).r;\n      sum += exp((val - maxval) * float(" + beta + "));\n    }\n\n    outColor = exp((texture(x, vec2(outTex.x, outTex.y)) - maxval) * float(" + beta + ")) / sum;\n  }";
+  return source;
+}
 
 /***/ }),
 /* 383 */
@@ -21474,7 +21483,11 @@ var Activation = function (_Layer) {
 
     _this.name = activation;
     if (_this.name !== 'NONE' && !_WebGL2.default.activationProgram) {
-      _this.activationProgram = _WebGL2.default.createProgram(activations[_this.name]);
+      if (_this.name === 'softmax') {
+        _this.activationProgram = _WebGL2.default.createProgram(activations['softmax'](attrs.beta));
+      } else {
+        _this.activationProgram = _WebGL2.default.createProgram(activations[_this.name]);
+      }
     }
     return _this;
   }
