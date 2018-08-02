@@ -8305,7 +8305,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = matMulDepthwise;
 function matMulDepthwise(fuse) {
-  var source = "#version 300 es\n  precision highp int;\n  precision highp float;\n  precision highp sampler2D;\n  \n  in vec2 outTex;\n  uniform sampler2D A;\n  uniform sampler2D B;\n  uniform sampler2D C;\n  uniform int inputChannels;\n  uniform bool addC;\n  out vec4 outColor;\n  \n  void main() {\n    ivec2 A_size = textureSize(A, 0);\n    int length = int(float(A_size[0]) / float(inputChannels));\n    int out_x = int(float(inputChannels) * outTex.x);\n    int out_y = int(float(A_size[1]) * outTex.y);\n  \n    float sum = 0.0;\n    for (int i = 0; i < length; ++i) {\n      float a = texelFetch(A, ivec2(i + out_x * length, out_y), 0).r;\n      float b = texelFetch(B, ivec2(i + out_x * length, 0), 0).r;\n      sum += a * b;\n    }\n  \n    if (addC) {\n      sum += texelFetch(C, ivec2(out_x, 0), 0).r;\n    }\n  \n    " + fuse + "\n    outColor = vec4(sum);\n  }";
+  var source = "#version 300 es\n  precision highp int;\n  precision highp float;\n  precision highp sampler2D;\n  \n  in vec2 outTex;\n  uniform sampler2D A;\n  uniform sampler2D B;\n  uniform sampler2D C;\n  uniform int inputChannels;\n  uniform int outputChannels;\n  uniform int depthMultiplier;\n  uniform bool addC;\n  out vec4 outColor;\n  \n  void main() {\n    ivec2 A_size = textureSize(A, 0);\n    ivec2 B_size = textureSize(B, 0);\n    int length = B_size[1];\n    int out_x = int(float(outputChannels) * outTex.x);\n    int out_y = int(float(A_size[1]) * outTex.y);\n    int index = int(floor(float(out_x) / float(depthMultiplier)));\n    float sum = 0.0;\n\n    if (index < inputChannels) {\n      for (int i = 0; i < length; ++i) {\n        float a = texelFetch(A, ivec2(i + index * length, out_y), 0).r;\n        float b = texelFetch(B, ivec2(out_x, i), 0).r;\n        sum += a * b;\n      }\n    }\n  \n    if (addC) {\n      sum += texelFetch(C, ivec2(out_x, 0), 0).r;\n    }\n  \n    " + fuse + "\n    outColor = vec4(sum);\n  }";
   return source;
 }
 
@@ -8324,15 +8324,17 @@ exports.default = depthwiseConv2D;
  * Create GLSL program for DepthwiseConv2 layer
  *
  * @param {number} inputChannels
+ * @param {number} outputChannels
+ * @param {number} depthMultiplier
  * @param {boolean} useBias
  * @param {boolean} [hasFragments]
  */
-function depthwiseConv2D(inputChannels, useBias, hasSlices, fuse) {
+function depthwiseConv2D(inputChannels, outputChannels, depthMultiplier, useBias, hasSlices, fuse) {
   var addBias = useBias ? 'sum += texelFetch(bias, ivec2(out_x, 0), 0).r;' : '';
 
-  var adjustIndicesForSlices = hasSlices ? 'ivec2 inputSize = textureSize(x, 0);\n      int sliceIndex = int(floor(float(index) / float(inputSize[1])));\n      index = int(mod(float(index), float(inputSize[1])));\n      int fetch_x = sliceIndex * ' + inputChannels + ' + out_x;' : 'int fetch_x = out_x;';
+  var adjustIndicesForSlices = hasSlices ? 'ivec2 inputSize = textureSize(x, 0);\n      int sliceIndex = int(floor(float(index) / float(inputSize[1])));\n      index = int(mod(float(index), float(inputSize[1])));\n      int fetch_x += sliceIndex * ' + inputChannels + ';' : '';
 
-  var source = '#version 300 es\n  precision highp int;\n  precision highp float;\n  precision highp isampler2D;\n  precision highp sampler2D;\n  \n  in vec2 outTex;\n  uniform sampler2D x;\n  uniform isampler2D indexMap;\n  uniform sampler2D kernel;\n  uniform sampler2D bias;\n  out vec4 outColor;\n  \n  void main() {\n    ivec2 indexMapSize = textureSize(indexMap, 0);\n    int out_x = int(float(' + inputChannels + ') * outTex.x);\n    int out_y = int(float(indexMapSize[1]) * outTex.y);\n    ivec2 kernelSize = textureSize(kernel, 0);\n    int convSize = kernelSize[1];\n    float sum = 0.0;\n    for (int i = 0; i < convSize; ++i) {\n      int index = texelFetch(indexMap, ivec2(i, out_y), 0).r; \n      if (index != -1) {\n        ' + adjustIndicesForSlices + '\n        sum += texelFetch(x, ivec2(fetch_x, index), 0).r * texelFetch(kernel, ivec2(out_x, i), 0).r;\n      }\n    }\n    ' + addBias + '\n    ' + fuse + '\n    outColor = vec4(sum);\n    // outColor = vec4(float(out_y));\n  }';
+  var source = '#version 300 es\n  precision highp int;\n  precision highp float;\n  precision highp isampler2D;\n  precision highp sampler2D;\n  \n  in vec2 outTex;\n  uniform sampler2D x;\n  uniform isampler2D indexMap;\n  uniform sampler2D kernel;\n  uniform sampler2D bias;\n  out vec4 outColor;\n  \n  void main() {\n    ivec2 indexMapSize = textureSize(indexMap, 0);\n    int out_x = int(float(' + outputChannels + ') * outTex.x);\n    int out_y = int(float(indexMapSize[1]) * outTex.y);\n    ivec2 kernelSize = textureSize(kernel, 0);\n    int convSize = kernelSize[1];\n    int fetch_x = int(floor(float(out_x) / float(' + depthMultiplier + ')));\n    float sum = 0.0;\n\n    if(fetch_x < ' + inputChannels + ') {\n      for (int i = 0; i < convSize; ++i) {\n        int index = texelFetch(indexMap, ivec2(i, out_y), 0).r; \n        if (index != -1) {\n          ' + adjustIndicesForSlices + '\n          sum += texelFetch(x, ivec2(fetch_x, index), 0).r * texelFetch(kernel, ivec2(out_x, i), 0).r;\n        }\n      }\n    }\n    ' + addBias + '\n    ' + fuse + '\n    outColor = vec4(sum);\n  }';
   return source;
 }
 
@@ -20899,6 +20901,8 @@ var DepthwiseConv2D = function (_Layer) {
         strides = _attrs$strides === undefined ? [1, 1] : _attrs$strides,
         _attrs$padding = attrs.padding,
         padding = _attrs$padding === undefined ? 'VALID' : _attrs$padding,
+        _attrs$depthMultiplie = attrs.depthMultiplier,
+        depthMultiplier = _attrs$depthMultiplie === undefined ? 1 : _attrs$depthMultiplie,
         _attrs$data_format = attrs.data_format,
         data_format = _attrs$data_format === undefined ? 'NHWC' : _attrs$data_format,
         _attrs$dilation_rate = attrs.dilation_rate,
@@ -20956,6 +20960,7 @@ var DepthwiseConv2D = function (_Layer) {
       _this.throwError('Incompatible combination of dilation_rate with strides.');
     }
 
+    _this.depthMultiplier = depthMultiplier;
     _this.activation = activation;
     _this.fuseActivation = _fuse.fuseShaderSource[_this.activation];
 
@@ -21026,9 +21031,8 @@ var DepthwiseConv2D = function (_Layer) {
       if (Array.isArray(this.padding)) {
         var outputHeight = (inputHeight - kernelHDilated + this.padding[0] + this.padding[1] + this.strides[0]) / this.strides[0];
         var outputWidth = (inputWidth - kernelWDilated + this.padding[2] + this.padding[3] + this.strides[1]) / this.strides[1];
-        this.outputShape = [outputHeight, outputWidth, inputChannels];
+        this.outputShape = [outputHeight, outputWidth, this.weights['kernel'].tensor.shape[1]];
         this.inputPadding = this.padding;
-        console.log();
       } else {
         var _outputHeight = this.padding === 'SAME' ? Math.floor((inputHeight + this.strides[0] - 1) / this.strides[0]) : Math.floor((inputHeight - kernelHDilated + this.strides[0]) / this.strides[0]);
         var _outputWidth = this.padding === 'SAME' ? Math.floor((inputWidth + this.strides[1] - 1) / this.strides[1]) : Math.floor((inputWidth - kernelWDilated + this.strides[1]) / this.strides[1]);
@@ -21040,7 +21044,7 @@ var DepthwiseConv2D = function (_Layer) {
         var paddingHeightAfter = paddingHeight - paddingHeightBefore;
         var paddingWidthBefore = Math.floor(paddingWidth / 2);
         var paddingWidthAfter = paddingWidth - paddingWidthBefore;
-        this.outputShape = [_outputHeight, _outputWidth, inputChannels];
+        this.outputShape = [_outputHeight, _outputWidth, this.weights['kernel'].tensor.shape[1]];
         this.inputPadding = [paddingHeightBefore, paddingHeightAfter, paddingWidthBefore, paddingWidthAfter];
       }
     }
@@ -21215,7 +21219,7 @@ var DepthwiseConv2D = function (_Layer) {
       if (x.is2DReshaped) {
         this.inputShape = x.originalShape;
         this._calcOutputShape(this.inputShape);
-        this._createIndexMap(x.indicesForReshaped);
+        this._createIndexMap();
         outputTextureShape = [this.outputShape[0] * this.outputShape[1], this.outputShape[2]];
       } else {
         this.inputShape = x.tensor.shape;
@@ -21241,7 +21245,7 @@ var DepthwiseConv2D = function (_Layer) {
           x.convertTextureSlicesToColStackTexture();
         }
         if (!this.depthwiseConv2DProgram) {
-          var depthwiseConv2DShaderSource = (0, _depthwiseConv2D2.default)(this.output.textureShape[1], this.useBias, hasFragments, this.fuseActivation);
+          var depthwiseConv2DShaderSource = (0, _depthwiseConv2D2.default)(this.inputShape[2], this.output.textureShape[1], this.depthMultiplier, this.useBias, hasFragments, this.fuseActivation);
           this.depthwiseConv2DProgram = _WebGL2.default.createProgram(depthwiseConv2DShaderSource);
         }
         _WebGL2.default.runProgram({
@@ -21263,7 +21267,7 @@ var DepthwiseConv2D = function (_Layer) {
           program: this.matMulDepthwiseProgram,
           output: this.output,
           inputs: matMulInputs,
-          uniforms: [{ value: this.useBias ? 1 : 0, type: 'bool', name: 'addC' }, { value: outputTextureShape[1], type: 'int', name: 'inputChannels' }],
+          uniforms: [{ value: this.useBias ? 1 : 0, type: 'bool', name: 'addC' }, { value: this.inputShape[2], type: 'int', name: 'inputChannels' }, { value: outputTextureShape[1], type: 'int', name: 'outputChannels' }, { value: this.depthMultiplier, type: 'int', name: 'depthMultiplier' }],
           supportSliceTexture: true
         });
       }
