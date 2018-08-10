@@ -545,8 +545,9 @@ var WebGL2 = function () {
 
       var compiled = gl.getShaderParameter(vertexShader, gl.COMPILE_STATUS);
       if (!compiled) {
+        var errorMsg = '[WebGL2] Failed to compile vertex shader: ' + gl.getShaderInfoLog(vertexShader);
         this.deleteAll();
-        throw new Error('[WebGL2] Failed to compile vertex shader: ' + gl.getShaderInfoLog(vertexShader));
+        throw new Error(errorMsg);
       }
 
       this._vertexShader = vertexShader;
@@ -624,8 +625,9 @@ var WebGL2 = function () {
 
       var compiled = gl.getShaderParameter(fragmentShader, gl.COMPILE_STATUS);
       if (!compiled) {
+        var errorMsg = '[WebGL2] Failed to compile fragment shader: ' + gl.getShaderInfoLog(fragmentShader);
         this.deleteAll();
-        throw new Error('[WebGL2] Failed to compile fragment shader: ' + gl.getShaderInfoLog(fragmentShader));
+        throw new Error(errorMsg);
       }
 
       var program = gl.createProgram();
@@ -641,8 +643,9 @@ var WebGL2 = function () {
 
       var linked = gl.getProgramParameter(program, gl.LINK_STATUS);
       if (!linked) {
+        var _errorMsg = '[WebGL2] Failed to link program: ' + gl.getProgramInfoLog(program);
         this.deleteAll();
-        throw new Error('[WebGL2] Failed to link program: ' + gl.getProgramInfoLog(program));
+        throw new Error(_errorMsg);
       }
 
       this._initVertexBuffers(program);
