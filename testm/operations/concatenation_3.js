@@ -2,7 +2,7 @@ describe('other', function() {
   describe('Concatenation Test for 4-D input with axis being 3', function() {
     const assert = chai.assert;
     const nn = navigator.ml.getNeuralNetworkContext();
-    it.skip('check result', async function() {
+    it('check result', async function() {
       let model = await nn.createModel(options);
 
       let float32TensorType = {type: nn.TENSOR_FLOAT32, dimensions: [2, 2, 2, 2]};

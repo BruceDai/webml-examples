@@ -157,7 +157,7 @@ describe('other', function() {
     }
   });
 
-  it.skip('check result by Concatenation Test for 4-D input with axis being 3', async function() {
+  it('check result by Concatenation Test for 4-D input with axis being 3', async function() {
     let model = await nn.createModel(options);
 
     let float32TensorType = {type: nn.TENSOR_FLOAT32, dimensions: [2, 2, 2, 2]};
@@ -212,7 +212,7 @@ describe('other', function() {
     }
   });
 
-  it.skip('check result by Concatenation Test for 4-D input with axis being -1', async function() {
+  it('check result by Concatenation Test for 4-D input with axis being -1', async function() {
     let model = await nn.createModel(options);
 
     let float32TensorType = {type: nn.TENSOR_FLOAT32, dimensions: [2, 2, 2, 2]};

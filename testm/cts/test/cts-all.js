@@ -100,7 +100,7 @@ describe('CTS', function() {
     }
   });
 
-  it.skip('check result for Avg pool float example/2', async function() {
+  it('check result for Avg pool float example/2', async function() {
     let model = await nn.createModel();
     let operandIndex = 0;
 
@@ -262,7 +262,7 @@ describe('CTS', function() {
     }
   });
 
-  it.skip('check result for Concat float example/1', async function() {
+  it('check result for Concat float example/1', async function() {
     let model = await nn.createModel();
     let operandIndex = 0;
 
@@ -313,7 +313,7 @@ describe('CTS', function() {
     }
   });
 
-  it.skip('check result for Concat float example/2', async function() {
+  it('check result for Concat float example/2', async function() {
     let model = await nn.createModel();
     let operandIndex = 0;
 
@@ -366,7 +366,7 @@ describe('CTS', function() {
     }
   });
 
-  it.skip('check result for Concat float example/3', async function() {
+  it('check result for Concat float example/3', async function() {
     let model = await nn.createModel();
     let operandIndex = 0;
 
@@ -1615,7 +1615,7 @@ describe('CTS', function() {
     }
   });
 
-  it.skip('check result for Depthwise conv2d float large 2 weights as inputs example', async function() {
+  it('check result for Depthwise conv2d float large 2 weights as inputs example', async function() {
     let model = await nn.createModel();
     let operandIndex = 0;
 
@@ -1870,7 +1870,7 @@ describe('CTS', function() {
     }
   });
 
-  it.skip('check result for Max pool float example/2', async function() {
+  it('check result for Max pool float example/2', async function() {
     let model = await nn.createModel();
     let operandIndex = 0;
 
@@ -2076,7 +2076,7 @@ describe('CTS', function() {
     }
   });
 
-  it.skip('check result for Reshape example', async function() {
+  it('check result for Reshape example', async function() {
     let model = await nn.createModel();
     let operandIndex = 0;
 
@@ -2122,7 +2122,7 @@ describe('CTS', function() {
     }
   });
 
-  it.skip('check result for Reshape weights as inputs example', async function() {
+  it('check result for Reshape weights as inputs example', async function() {
     let model = await nn.createModel();
     let operandIndex = 0;
 
@@ -2214,7 +2214,7 @@ describe('CTS', function() {
     }
   });
 
-  it.skip('check result for Softmax float example/2', async function() {
+  it('check result for Softmax float example/2', async function() {
     let model = await nn.createModel();
     let operandIndex = 0;
 
