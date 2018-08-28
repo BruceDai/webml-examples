@@ -8849,7 +8849,7 @@ var _Pool2D = function (_Layer) {
         inputRows = inputRows + paddingRowBefore + paddingRowAfter;
         inputCols = inputCols + paddingColBefore + paddingColAfter;
         var _rowIndices = new _Tensor2.default([], [inputRows, inputCols]);
-        _ndarrayOps2.default.assigns(_rowIndices.tensor, Number.NEGATIVE_INFINITY);
+        _ndarrayOps2.default.assigns(_rowIndices.tensor, -1);
         _ndarrayOps2.default.assign(_rowIndices.tensor.hi(this.inputShape[0] + paddingRowBefore, this.inputShape[1] + paddingColBefore).lo(paddingRowBefore, paddingColBefore), rowIndices.tensor);
         rowIndices.tensor = _rowIndices.tensor;
       }
