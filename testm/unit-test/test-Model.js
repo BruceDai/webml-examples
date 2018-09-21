@@ -201,7 +201,7 @@ describe('Unit Test/Model Test', function() {
       });
     });
 
-    it.skip('raise error when attempting to add an operand into the finished model', function() {
+    it('raise error when attempting to add an operand into the finished model', function() {
       return nn.createModel(options).then((model)=>{
         let op = {type: nn.TENSOR_FLOAT32, dimensions: [4, 1, 2]};
         model.addOperand(op);
@@ -900,7 +900,7 @@ describe('Unit Test/Model Test', function() {
       });
     });
 
-    it.skip('raise error when attempting to reset the value for an operand of the finished model', function() {
+    it('raise error when attempting to reset the value for an operand of the finished model', function() {
       return nn.createModel(options).then((model)=>{
         let op = {type: nn.TENSOR_FLOAT32, dimensions: [4, 1, 2]};
         model.addOperand(op);
@@ -3884,7 +3884,7 @@ describe('Unit Test/Model Test', function() {
     });
 
 
-    it.skip('raise error when attempting to reset the operation of the finished model', function() {
+    it('raise error when attempting to reset the operation of the finished model', function() {
       return nn.createModel(options).then((model)=>{
         let op = {type: nn.TENSOR_FLOAT32, dimensions: TENSOR_DIMENSIONS};
         model.addOperand(op);
@@ -3985,7 +3985,7 @@ describe('Unit Test/Model Test', function() {
       });
     });
 
-    it.skip('raise error when attempting to modify inputs/outputs of the finished model', function() {
+    it('raise error when attempting to modify inputs/outputs of the finished model', function() {
       return nn.createModel(options).then((model)=>{
         let op = {type: nn.TENSOR_FLOAT32, dimensions: TENSOR_DIMENSIONS};
         model.addOperand(op);
