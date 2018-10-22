@@ -50,7 +50,7 @@ describe('Add Test', function() {
     await execution.startCompute();
 
     for (let i = 0; i < tensorLength; ++i) {
-      assert.isTrue(almostEqualCTSCTS(outputData[i], input0Data[i] + input1Data[i]));
+      assert.isTrue(almostEqualCTS(outputData[i], input0Data[i] + input1Data[i]));
     }
   });
 });
