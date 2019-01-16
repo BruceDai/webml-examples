@@ -1,5 +1,19 @@
 const availableModels = [
   {
+    modelName: 'DeepLab 321',
+    modelFile: './model/deeplab_mobilenetv2_321.tflite',
+    labelsFile: './model/labels.txt',
+    inputSize: [321, 321, 3],
+    outputSize: [321, 321, 21],
+  },
+  {
+    modelName: 'DeepLab 321 Atrous',
+    modelFile: './model/deeplab_mobilenetv2_321_dilated.tflite',
+    labelsFile: './model/labels.txt',
+    inputSize: [321, 321, 3],
+    outputSize: [321, 321, 21],
+  },
+  {
     modelName: 'DeepLab 513',
     modelFile: './model/deeplab_mobilenetv2_513.tflite',
     labelsFile: './model/labels.txt',
@@ -12,6 +26,20 @@ const availableModels = [
     labelsFile: './model/labels.txt',
     inputSize: [513, 513, 3],
     outputSize: [513, 513, 21],
+  },
+  {
+    modelName: 'DeepLab 224',
+    modelFile: './model/deeplab_mobilenetv2_224.tflite',
+    labelsFile: './model/labels.txt',
+    inputSize: [224, 224, 3],
+    outputSize: [224, 224, 21],
+  },
+  {
+    modelName: 'DeepLab 224 Atrous',
+    modelFile: './model/deeplab_mobilenetv2_224_dilated.tflite',
+    labelsFile: './model/labels.txt',
+    inputSize: [224, 224, 3],
+    outputSize: [224, 224, 21],
   },
 ];
 
