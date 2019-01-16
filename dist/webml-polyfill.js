@@ -8113,18 +8113,25 @@ var OperationCode = exports.OperationCode = {
 
   /** Resizes images to given size using the bilinear interpretation.
    *
-   * Resized images will be distorted if their output aspect ratio is not the same as
-   * input aspect ratio.
+   * Support align_corners parameter. Default value is FALSE (0).
    *
    * Supported tensor types:
    * * {@link TENSOR_FLOAT32}
    *
    * Supported tensor rank: 4, with "NHWC" data layout.
    *
-   * Inputs:
+   * Inputs (without align_corners):
    * * 0: A 4-D tensor, of shape [batches, height, width, depth], specifying the input.
    * * 1: An INT32 value, specifying the output height of the output tensor.
    * * 2: An INT32 value, specifying the output width of the output tensor.
+   *
+   * Inputs (with align_corners):
+   * * 0: A 4-D tensor, of shape [batches, height, width, depth], specifying the input.
+   * * 1: An INT32 value, specifying the output height of the output tensor.
+   * * 2: An INT32 value, specifying the output width of the output tensor.
+   * * 3: An INT32 value, specifying align_corners parameter. If TRUE (1), the centers of
+   *      the 4 corner pixels of the input and output tensors are aligned, preserving
+   *      the values at the corner pixels.
    *
    * Outputs:
    * * 0: The output 4-D tensor, of shape [batches, new_height, new_width, depth].
@@ -14159,10 +14166,22 @@ var PreparedModel = function () {
           }break;
         case _Enums.OperationCode.RESIZE_BILINEAR:
           {
-            allParametersPresent(3, 1);
+            var _inCount3 = inputs.length;
+            if (_inCount3 !== 3 && _inCount3 !== 4) {
+              throw new Error('Invalid parameters number of resize bilinear ' + op);
+            }
+            allParametersPresent(_inCount3, 1);
             var _input8 = operands[inputs[0]];
             var newHeight = operands[inputs[1]].value[0]; // Dont use newHeight and newWidth
             var newWidth = operands[inputs[2]].value[0]; // since outputShape has been set at first
+            // init resizeBilinearParams
+            // default set align_corners to false
+            var resizeBilinearParams = {
+              align_corners: false
+            };
+            if (_inCount3 === 4) {
+              resizeBilinearParams.align_corners = operands[inputs[3]].value[0] !== 0;
+            }
             var _output7 = operands[outputs[0]];
             var outSizeHeight = _output7.runtimeshape.Dims(1);
             var outSizeWidth = _output7.runtimeshape.Dims(2);
@@ -14182,12 +14201,6 @@ var PreparedModel = function () {
             // Error check
             OPS_CHECK(_input8.runtimeshape.DimensionsCount() <= 4);
             OPS_CHECK(_output7.runtimeshape.DimensionsCount() <= 4);
-
-            // init resizeBilinearParams
-            // default set align_corners to true
-            var resizeBilinearParams = {
-              align_corners: true
-            };
 
             nn_ops.resizeBilinearFloat32(resizeBilinearParams, _input8.runtimeshape, _input8.value, outSizeShape, outSizeData, _output7.runtimeshape, _output7.value);
             outSizeShape.delete();
@@ -15787,7 +15800,10 @@ var WebGLModel = function () {
             var newHeight = operands[inputs[1]].value[0];
             var newWidth = operands[inputs[2]].value[0];
             var _output8 = operands[outputs[0]];
-            var alignCorner = true;
+            var alignCorner = false;
+            if (inputs.length === 4) {
+              alignCorner = operands[inputs[3]].value[0] !== 0;
+            }
             _output8.assign(_input6.resizeBilinear([newHeight, newWidth], alignCorner));
           }break;
         default:

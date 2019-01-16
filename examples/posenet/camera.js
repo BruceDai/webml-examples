@@ -277,7 +277,7 @@ async function main() {
         .text('LOW_POWER')
         .click(_ => changePrefer('low'));
       $('.preference').append(low);
-    }  else if (currentOS === 'Mac OS') {
+    } else if (currentOS === 'Mac OS') {
       let fast = $('<button class="dropdown-item"/>')
         .text('FAST_SINGLE_ANSWER')
         .click(_ => changePrefer('fast'));
