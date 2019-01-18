@@ -1,0 +1,47 @@
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>WebML Polyfill | Mocha Tests</title>
+    <link href="cdn.rawgit.com/mochajs/mocha/v3.0.2/mocha.css" rel="stylesheet" />
+  </head>
+  <body>
+    <div id="mocha"></div>
+    <script src="cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="cdnjs.cloudflare.com/ajax/libs/mocha/4.0.1/mocha.min.js"></script>
+    <script src="cdnjs.cloudflare.com/ajax/libs/chai/4.1.2/chai.min.js"></script>
+    <script src="cdnjs.cloudflare.com/ajax/libs/fetch/2.0.3/fetch.min.js"></script>
+    <script src="../dist/webml-polyfill.js"></script>
+    <script src="./utils.js"></script>
+    <script>
+      window.onload = setOptions;
+    </script>
+    <script>
+      mocha.setup('bdd');
+    </script>
+    <script src="./cts/test/V1_0/resize_bilinear.js"></script>
+    <script src="./cts/test/V1_0/resize_bilinear_2.js"></script>
+    <script src="./cts/test_supplement/resize_bilinear_distorted_1.js"></script>
+    <script src="./cts/test_supplement/resize_bilinear_distorted_2.js"></script>
+    <script src="./cts/test_supplement/resize_bilinear_distorted_3.js"></script>
+    <script src="./cts/test_supplement/resize_bilinear_distorted_4.js"></script>
+    <script src="./cts/test_supplement/resize_bilinear_distorted_7.js"></script>
+    <script src="./cts/test_supplement/resize_bilinear_distorted_10.js"></script>
+    <script src="./cts/test_supplement/resize_bilinear_remain_size_1.js"></script>
+    <script src="./cts/test_supplement/resize_bilinear_remain_size_2.js"></script>
+    <script src="./cts/test_supplement/resize_bilinear_remain_size_3.js"></script>
+    <script src="./cts/test_supplement/resize_bilinear_remain_size_4.js"></script>
+    <script src="./cts/test_supplement/resize_bilinear_zoom_in_1.js"></script>
+    <script src="./cts/test_supplement/resize_bilinear_zoom_in_2.js"></script>
+    <script src="./cts/test_supplement/resize_bilinear_zoom_in_5.js"></script>
+    <script src="./cts/test_supplement/resize_bilinear_zoom_out_1.js"></script>
+    <script src="./cts/test_supplement/resize_bilinear_zoom_out_2.js"></script>
+    <script src="./cts/test_supplement/resize_bilinear_zoom_out_3.js"></script>
+    <script src="./cts/test_supplement/resize_bilinear_zoom_out_4.js"></script>
+    <script src="./cts/test_supplement/resize_bilinear_zoom_out_7.js"></script>
+    <script>
+      window.mochaFinish = false;
+      mocha.globals(['jQuery']);
+      mocha.run(function() {window.mochaFinish = true});
+    </script>
+  </body>
+</html>

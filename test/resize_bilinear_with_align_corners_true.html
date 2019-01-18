@@ -18,13 +18,18 @@
     <script>
       mocha.setup('bdd');
     </script>
-    <script src="./cts/test_supplement/atrous_conv_1_h3_w2_SAME.js"></script>
-    <script src="./cts/test_supplement/atrous_conv_1_h3_w2_VALID.js"></script>
-    <script src="./cts/test_supplement/atrous_conv_3_h3_w2_SAME.js"></script>
-    <script src="./cts/test_supplement/atrous_conv_3_h3_w2_VALID.js"></script>
+    <script src="./cts/test_supplement/resize_bilinear_distorted_6_1.js"></script>
+    <script src="./cts/test_supplement/resize_bilinear_distorted_9_1.js"></script>
+    <script src="./cts/test_supplement/resize_bilinear_distorted_12_1.js"></script>
+    <script src="./cts/test_supplement/resize_bilinear_remain_size_6_1.js"></script>
+    <script src="./cts/test_supplement/resize_bilinear_zoom_in_4_1.js"></script>
+    <script src="./cts/test_supplement/resize_bilinear_zoom_in_7_1.js"></script>
+    <script src="./cts/test_supplement/resize_bilinear_zoom_out_6_1.js"></script>
+    <script src="./cts/test_supplement/resize_bilinear_zoom_out_9_1.js"></script>
     <script>
+      window.mochaFinish = false;
       mocha.globals(['jQuery']);
-      mocha.run();
+      mocha.run(function() {window.mochaFinish = true});
     </script>
   </body>
 </html>
