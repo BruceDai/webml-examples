@@ -511,7 +511,7 @@ class WebMLJSBenchmark extends Benchmark {
   }
   async executeSingleAsync() {
     let result;
-    result = await this.model.compute(this.inputTensor, this.outputTensor);
+    result = await this.model.compute([this.inputTensor], [this.outputTensor]);
     console.log(`compute result: ${result}`);
   }
   async executeSingleAsyncSSDMN() {
