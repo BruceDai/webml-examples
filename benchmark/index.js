@@ -40,10 +40,6 @@ const modelDic = {
     "model": inception_resnet_v2_tflite,
     "name": "Incep. Res. V2(TFlite)",
   },
-  "ssd_mobilenet.tflite": {
-    "model": ssd_mobilenet_tflite,
-    "name": "SSD MobileNet(TFlite)",
-  },
   "squeezenet1.1.onnx": {
     "model": squeezenet_onnx,
     "name": "SqueezeNet(Onnx)",
