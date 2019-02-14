@@ -7,8 +7,6 @@ if (navigator.ml.isPolyfill) {
   nnPolyfill = navigator.ml_polyfill.getNeuralNetworkContext();
 }
 
-const currentOS = getOS();
-
 const preferMap = {
   'MPS': 'sustained',
   'BNNS': 'fast',
@@ -18,7 +16,8 @@ const preferMap = {
 };
 
 const mobilenet_v1_tflite = {
-  modelName: 'Mobilenet V1(TFlite)',
+  modelName: 'mobilenet_v1_tflite',
+  modelSize: '16.9MB',
   inputSize: [224, 224, 3],
   outputSize: 1001,
   modelFile: '../image_classification/model/mobilenet_v1_1.0_224.tflite',
@@ -26,11 +25,13 @@ const mobilenet_v1_tflite = {
   preOptions: {
     mean: [127.5, 127.5, 127.5],
     std: [127.5, 127.5, 127.5],
-  }
+  },
+  intro: 'An efficient Convolutional Neural Networks for Mobile Vision Applications.',
+  paperUrl: 'https://arxiv.org/pdf/1704.04861.pdf'
 };
-
 const mobilenet_v2_tflite = {
-  modelName: 'Mobilenet V2(TFlite)',
+  modelName: 'mobilenet_v2_tflite',
+  modelSize: '14.0MB',
   inputSize: [224, 224, 3],
   outputSize: 1001,
   modelFile: '../image_classification/model/mobilenet_v2_1.0_224.tflite',
@@ -38,11 +39,13 @@ const mobilenet_v2_tflite = {
   preOptions: {
     mean: [127.5, 127.5, 127.5],
     std: [127.5, 127.5, 127.5],
-  }
+  },
+  intro: 'MobileNetV2 improves the state of the art performance of mobile models.',
+  paperUrl: 'https://arxiv.org/abs/1801.04381'
 };
-
 const inception_v3_tflite = {
-  modelName: 'Inception V3(TFlite)',
+  modelName: 'inception_v3_tflite',
+  modelSize: '95.3MB',
   inputSize: [299, 299, 3],
   outputSize: 1001,
   modelFile: '../image_classification/model/inception_v3.tflite',
@@ -51,10 +54,12 @@ const inception_v3_tflite = {
     mean: [127.5, 127.5, 127.5],
     std: [127.5, 127.5, 127.5],
   },
+  intro: 'Inception-v3 is trained for the ImageNet Large Visual Recognition Challenge.',
+  paperUrl: 'http://arxiv.org/abs/1512.00567'
 };
-
 const inception_v4_tflite = {
-  modelName: 'Inception V4(TFlite)',
+  modelName: 'inception_v4_tflite',
+  modelSize: '170.7MB',
   inputSize: [299, 299, 3],
   outputSize: 1001,
   modelFile: '../image_classification/model/inception_v4.tflite',
@@ -62,11 +67,13 @@ const inception_v4_tflite = {
   preOptions: {
     mean: [127.5, 127.5, 127.5],
     std: [127.5, 127.5, 127.5],
-  }
+  },
+  intro: 'Inception architecture that has been shown to achieve very good performance at relatively low computational cost.',
+  paperUrl: 'https://arxiv.org/abs/1602.07261'
 };
-
 const squeezenet_tflite = {
-  modelName: 'Squeezenet(TFlite)',
+  modelName: 'squeezenet_tflite',
+  modelSize: '5.0MB',
   inputSize: [224, 224, 3],
   outputSize: 1001,
   modelFile: '../image_classification/model/squeezenet.tflite',
@@ -74,11 +81,13 @@ const squeezenet_tflite = {
   preOptions: {
     mean: [127.5, 127.5, 127.5],
     std: [127.5, 127.5, 127.5],
-  }
+  },
+  intro: 'A light-weight CNN providing Alexnet level accuracy with 50X fewer parameters.',
+  paperUrl: 'https://arxiv.org/abs/1602.07360'
 };
-
 const inception_resnet_v2_tflite = {
-  modelName: 'Incep. Res. V2(TFlite)',
+  modelName: 'inception_resnet_v2_tflite',
+  modelSize: '121.0MB',
   inputSize: [299, 299, 3],
   outputSize: 1001,
   modelFile: '../image_classification/model/inception_resnet_v2.tflite',
@@ -89,11 +98,13 @@ const inception_resnet_v2_tflite = {
   },
   postOptions: {
     softmax: true,
-  }
+  },
+  intro: 'Inception architecture that has been shown to achieve very good performance at relatively low computational cost, and training with residual connections accelerates the training of Inception networks significantly. There is also some evidence of residual Inception networks outperforming similarly expensive Inception networks without residual connections.',
+  paperUrl: 'https://arxiv.org/abs/1602.07261'
 };
-
 const squeezenet_onnx = {
-  modelName: 'SqueezeNet(Onnx)',
+  modelName: 'squeezenet_onnx',
+  modelSize: '5.0MB',
   modelFile: '../image_classification/model/squeezenet1.1.onnx',
   labelsFile: '../image_classification/model/labels1000.txt',
   inputSize: [224, 224, 3],
@@ -106,11 +117,13 @@ const squeezenet_onnx = {
   },
   postOptions: {
     softmax: true,
-  }
+  },
+  intro: 'A light-weight CNN providing Alexnet level accuracy with 50X fewer parameters.',
+  paperUrl: 'https://arxiv.org/abs/1602.07360'
 };
-
 const mobilenet_v2_onnx = {
-  modelName: 'Mobilenet v2(Onnx)',
+  modelName: 'mobilenet_v2_onnx',
+  modelSize: '14.2MB',
   modelFile: '../image_classification/model/mobilenetv2-1.0.onnx',
   labelsFile: '../image_classification/model/labels1000.txt',
   inputSize: [224, 224, 3],
@@ -123,11 +136,13 @@ const mobilenet_v2_onnx = {
   },
   postOptions: {
     softmax: true,
-  }
+  },
+  intro: 'MobileNetV2 improves the state of the art performance of mobile models.',
+  paperUrl: 'https://arxiv.org/abs/1801.04381'
 };
-
 const resnet_v1_onnx = {
-  modelName: 'ResNet50 v1(Onnx)',
+  modelName: 'resnet_v1_onnx',
+  modelSize: '102.6MB',
   modelFile: '../image_classification/model/resnet50v1.onnx',
   labelsFile: '../image_classification/model/labels1000.txt',
   inputSize: [224, 224, 3],
@@ -140,11 +155,13 @@ const resnet_v1_onnx = {
   },
   postOptions: {
     softmax: true,
-  }
+  },
+  intro: 'A residual learning framework to ease the training of networks that are substantially deeper than those used previously. This result won the 1st place on the ILSVRC 2015 classification task.',
+  paperUrl: 'https://arxiv.org/abs/1512.03385'
 };
-
 const resnet_v2_onnx = {
-  modelName: 'ResNet50 v2(Onnx)',
+  modelName: 'resnet_v2_onnx',
+  modelSize: '102.4MB',
   modelFile: '../image_classification/model/resnet50v2.onnx',
   labelsFile: '../image_classification/model/labels1000.txt',
   inputSize: [224, 224, 3],
@@ -157,19 +174,23 @@ const resnet_v2_onnx = {
   },
   postOptions: {
     softmax: true,
-  }
+  },
+  intro: 'Deep residual networks have emerged as a family of extremely deep architectures showing compelling accuracy and nice convergence behaviors. It reports improved results using a 1001-layer ResNet on CIFAR-10 (4.62% error) and CIFAR-100, and a 200-layer ResNet on ImageNet.',
+  paperUrl: 'https://arxiv.org/abs/1603.05027'
 };
-
-const inceptionv2_onnx = {
-  modelName: 'Inception v2(Onnx)',
+const inception_v2_onnx = {
+  modelName: 'inception_v2_onnx',
+  modelSize: '45.0MB',
   modelFile: '../image_classification/model/inceptionv2.onnx',
   labelsFile: '../image_classification/model/ilsvrc2012labels.txt',
   inputSize: [224, 224, 3],
   outputSize: 1000,
+  intro: 'Inception-v2 is trained for the ImageNet Large Visual Recognition Challenge.',
+  paperUrl: 'https://arxiv.org/abs/1512.00567'
 };
-
 const densenet_onnx = {
-  modelName: 'DenseNet(Onnx)',
+  modelName: 'densenet_onnx',
+  modelSize: '32.7MB',
   modelFile: '../image_classification/model/densenet121.onnx',
   labelsFile: '../image_classification/model/labels1000.txt',
   inputSize: [224, 224, 3],
@@ -183,11 +204,14 @@ const densenet_onnx = {
   },
   postOptions: {
     softmax: true,
-  }
+  },
+  intro: 'Dense Convolutional Network (DenseNet) connects each layer to every other layer in a feed-forward fashion. DenseNets have several compelling advantages: they alleviate the vanishing-gradient problem, strengthen feature propagation, encourage feature reuse, and substantially reduce the number of parameters. ',
+  paperUrl: 'https://arxiv.org/abs/1608.06993'
 };
 
 const ssd_mobilenetv1_tflite = {
-  modelName: 'SSD MobileNetV1(TFlite)',
+  modelName: 'SSD MobileNet v1(TFlite)',
+  modelSize: '27.3MB',
   modelFile: '../object_detection/model/ssd_mobilenet_v1.tflite',
   labelsFile: '../object_detection/model/coco_labels_list.txt',
   box_size: 4,
@@ -201,7 +225,8 @@ const ssd_mobilenetv1_tflite = {
 };
 
 const ssd_mobilenetv2_tflite = {
-  modelName: 'SSD MobileNetV2(TFlite)',
+  modelName: 'SSD MobileNet v2(TFlite)',
+  modelSize: '17.9MB',
   modelFile: '../object_detection/model/ssd_mobilenet_v2.tflite',
   labelsFile: '../object_detection/model/coco_labels_list.txt',
   box_size: 4,
@@ -215,7 +240,8 @@ const ssd_mobilenetv2_tflite = {
 };
 
 const ssdlite_mobilenetv2_tflite = {
-  modelName: 'SSDLite MobileNetV2(TFlite)',
+  modelName: 'SSDLite MobileNet v2(TFlite)',
+  modelSize: '67.3MB',
   modelFile: '../object_detection/model/ssdlite_mobilenet_v2.tflite',
   labelsFile: '../object_detection/model/coco_labels_list.txt',
   box_size: 4,
@@ -230,12 +256,38 @@ const ssdlite_mobilenetv2_tflite = {
 
 const posenet = {
   modelName: 'PoseNet',
+  modelSize: '13.3MB',
+  modelFile: '../skeleton_detection/model/mobilenet_v1_101',
   inputSize: [513, 513, 3],
   preOptions: {
     mean: [127.5, 127.5, 127.5],
     std: [127.5, 127.5, 127.5],
-  }
+  },
+  intro: 'PoseNet is a machine learning model that allows for Real-time Human Pose Estimation which can be used to estimate either a single pose or multiple poses.',
+  paperUrl: 'https://arxiv.org/abs/1803.08225'
 };
+
+const deeplab_mobilenet_v2_513_tflite = {
+  modelName: 'deeplab_mobilenet_v2_513_tflite',
+  modelSize: '9.5MB',
+  modelFile: '../semantic_segmentation/model/deeplab_mobilenetv2_513.tflite',
+  labelsFile: '../semantic_segmentation/model/labels.txt',
+  inputSize: [513, 513, 3],
+  outputSize: [513, 513, 21],
+  intro: 'DeepLab is a state-of-art deep learning model for semantic image segmentation, where the goal is to assign semantic labels (e.g., person, dog, cat and so on) to every pixel in the input image.',
+  paperUrl: 'https://arxiv.org/abs/1802.02611'
+}
+  
+const deeplab_mobilenet_v2_513_dilated_tflite = {
+  modelName: 'deeplab_mobilenet_v2_513_dilated_tflite',
+  modelSize: '8.4MB',
+  modelFile: '../semantic_segmentation/model/deeplab_mobilenetv2_513_dilated.tflite',
+  labelsFile: '../semantic_segmentation/model/labels.txt',
+  inputSize: [513, 513, 3],
+  outputSize: [513, 513, 21],
+  intro: 'Equivalent to the model above (without dilated suffix) but only available on platforms that natively support atrous convolution.',
+  paperUrl: 'https://arxiv.org/abs/1802.02611'
+}
 
 const imageClassificationModels = [
   mobilenet_v1_tflite,
@@ -248,7 +300,7 @@ const imageClassificationModels = [
   mobilenet_v2_onnx,
   resnet_v1_onnx,
   resnet_v2_onnx,
-  inceptionv2_onnx,
+  inception_v2_onnx,
   densenet_onnx,
 ];
 
@@ -258,7 +310,17 @@ const objectDetectionModels = [
   ssdlite_mobilenetv2_tflite,
 ];
 
-function getOS() {
+const humanPoseEstimationModels = [
+  posenet,
+];
+
+const semanticSegmentationModels = [
+  deeplab_mobilenet_v2_513_tflite,
+  deeplab_mobilenet_v2_513_dilated_tflite
+
+];
+
+const getOS = () => {
   var userAgent = window.navigator.userAgent,
       platform = window.navigator.platform,
       macosPlatforms = ['Macintosh', 'MacIntel', 'MacPPC', 'Mac68K'],
@@ -281,7 +343,9 @@ function getOS() {
   return os;
 }
 
-function getNativeAPI(preferString) {
+const currentOS = getOS();
+
+const getNativeAPI = (preferString) => {
   const apiMapping = {
     'Android': {
       'sustained': 'NN',
@@ -290,11 +354,11 @@ function getNativeAPI(preferString) {
     },
     'Windows': {
       'sustained': 'clDNN',
-      // 'fast': 'MKL-DNN', // implementing
+      'fast': 'mklDNN',
     },
     'Linux': {
       'sustained': 'clDNN',
-      // 'fast': 'MKL-DNN', // implementing
+      'fast': 'mklDNN',
     },
     'Mac OS': {
       'fast': 'BNNS',
@@ -304,12 +368,12 @@ function getNativeAPI(preferString) {
   return apiMapping[currentOS][preferString];
 }
 
-function getUrlParams( prop ) {
+const getUrlParams = (prop) => {
   var params = {};
   var search = decodeURIComponent( window.location.href.slice( window.location.href.indexOf( '?' ) + 1 ) );
   var definitions = search.split( '&' );
 
-  definitions.forEach( function( val, key ) {
+  definitions.forEach((val, key) => {
     var parts = val.split( '=', 2 );
       params[ parts[ 0 ] ] = parts[ 1 ];
   } );
@@ -317,7 +381,7 @@ function getUrlParams( prop ) {
   return ( prop && prop in params ) ? params[ prop ] : params;
 }
 
-function getPreferParam() {
+const getPreferParam = () => {
   // workaround for using MPS backend on Mac OS by visiting URL with 'prefer=sustained'
   // workaround for using BNNS backend on Mac OS by visiting URL with 'prefer=fast'
   // use 'sustained' as default for Mac OS
@@ -335,7 +399,7 @@ function getPreferParam() {
   return prefer;
 }
 
-function getPrefer(backend) {
+const getPrefer = (backend) => {
   let nn = navigator.ml.getNeuralNetworkContext();
   let prefer = nn.PREFER_FAST_SINGLE_ANSWER;
   if (currentOS === 'Mac OS' && backend === 'WebML') {
@@ -349,7 +413,7 @@ function getPrefer(backend) {
   return prefer;
 }
 
-function getPreferCode(backend, prefer) {
+const getPreferCode = (backend, prefer) => {
   let preferCode;
   let nn = navigator.ml.getNeuralNetworkContext();
   if (backend === 'WASM') {
