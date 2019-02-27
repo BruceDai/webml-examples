@@ -3,6 +3,28 @@ describe('Unit Test/Model Test', function() {
   const TENSOR_DIMENSIONS = [2, 2, 2, 2];
   let nn;
 
+  async function assertThrowsAsync(fn, regExp) {
+    let f = () => {};
+    try {
+      await fn();
+    } catch(e) {
+      f = () => {throw e};
+    } finally {
+      assert.throws(f, regExp);
+    }
+  }
+
+  async function assertDoesNotThrowAsync(fn, regExp) {
+    let f = () => {};
+    try {
+      await fn();
+    } catch(e) {
+      f = () => {throw e};
+    } finally {
+      assert.doesNotThrow(f, regExp);
+    }
+  }
+
   beforeEach(function(){
     nn = navigator.ml.getNeuralNetworkContext();
   });
@@ -6710,6 +6732,80 @@ describe('Unit Test/Model Test', function() {
         assert.throws(() => {
           model.createCompilation();
         });
+      });
+    });
+
+    it('the length of inputs being 7 for "MAX_POOL_2D" operation', async function() {
+      let model = await nn.createModel(options);
+      let operandIndex = 0;
+
+      let type1 = {type: nn.INT32};
+      let type0 = {type: nn.TENSOR_FLOAT32, dimensions: [1, 2, 2, 1]};
+  
+      let op1 = operandIndex++;
+      model.addOperand(type0);
+      let cons1 = operandIndex++;
+      model.addOperand(type1);
+      let pad = operandIndex++;
+      model.addOperand(type1);
+      let act = operandIndex++;
+      model.addOperand(type1);
+      let op3 = operandIndex++;
+      model.addOperand(type0);
+  
+      model.setOperandValue(cons1, new Int32Array([1]));
+      model.setOperandValue(pad, new Int32Array([2]));
+      model.setOperandValue(act, new Int32Array([0]));
+      model.addOperation(nn.MAX_POOL_2D, [op1, pad, cons1, cons1, cons1, cons1, act], [op3]);
+  
+      model.identifyInputsAndOutputs([op1], [op3]);
+      await model.finish();
+  
+      let compilation = await model.createCompilation();
+      compilation.setPreference(getPreferenceCode(options.prefer));
+      await compilation.finish();
+  
+      let execution = await compilation.createExecution();
+  
+      await assertDoesNotThrowAsync(async() => {
+        await execution.startCompute();
+      });
+    });
+
+    it('raise error when the length of inputs is 9 (not 7 or 10) for "MAX_POOL_2D" operation', async function() {
+      let model = await nn.createModel(options);
+      let operandIndex = 0;
+
+      let type1 = {type: nn.INT32};
+      let type0 = {type: nn.TENSOR_FLOAT32, dimensions: [1, 2, 2, 1]};
+  
+      let op1 = operandIndex++;
+      model.addOperand(type0);
+      let cons1 = operandIndex++;
+      model.addOperand(type1);
+      let pad0 = operandIndex++;
+      model.addOperand(type1);
+      let act = operandIndex++;
+      model.addOperand(type1);
+      let op3 = operandIndex++;
+      model.addOperand(type0);
+  
+      model.setOperandValue(cons1, new Int32Array([1]));
+      model.setOperandValue(pad0, new Int32Array([0]));
+      model.setOperandValue(act, new Int32Array([0]));
+      model.addOperation(nn.MAX_POOL_2D, [op1, pad0, pad0, pad0, cons1, cons1, cons1, cons1, act], [op3]);
+  
+      model.identifyInputsAndOutputs([op1], [op3]);
+      await model.finish();
+  
+      let compilation = await model.createCompilation();
+      compilation.setPreference(getPreferenceCode(options.prefer));
+      await compilation.finish();
+  
+      let execution = await compilation.createExecution();
+  
+      await assertThrowsAsync(async() => {
+        await execution.startCompute();
       });
     });
   });
