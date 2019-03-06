@@ -269,7 +269,7 @@ async function main() {
         .click(_ => changePrefer('low'));
       $('.preference').append(low);
     } else if (currentOS === 'Windows' || currentOS === 'Linux') {
-      let fast = $('<button class="dropdown-item" disabled />')
+      let fast = $('<button class="dropdown-item"/>')
         .text('FAST_SINGLE_ANSWER')
         .click(_ => changePrefer('fast'));
       $('.preference').append(fast);
