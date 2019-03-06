@@ -41,6 +41,20 @@ const availableModels = [
     inputSize: [224, 224, 3],
     outputSize: [224, 224, 21],
   },
+  {
+    modelName: 'DeepLab 257',
+    modelFile: './model/deeplab_mobilenetv2_257.tflite',
+    labelsFile: './model/labels.txt',
+    inputSize: [257, 257, 3],
+    outputSize: [257, 257, 21],
+  },
+  {
+    modelName: 'DeepLab 257 Atrous',
+    modelFile: './model/deeplab_mobilenetv2_257_dilated.tflite',
+    labelsFile: './model/labels.txt',
+    inputSize: [257, 257, 3],
+    outputSize: [257, 257, 21],
+  },
 ];
 
 function main(camera) {
@@ -461,7 +475,7 @@ function main(camera) {
         .click(_ => changePrefer('low'));
       $('.preference').append(low);
     } else if (currentOS === 'Windows' || currentOS === 'Linux') {
-      let fast = $('<button class="dropdown-item" disabled />')
+      let fast = $('<button class="dropdown-item"/>')
         .text('FAST_SINGLE_ANSWER')
         .click(_ => changePrefer('fast'));
       $('.preference').append(fast);
