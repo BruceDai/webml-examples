@@ -2054,7 +2054,7 @@ describe('Unit Test/Model Test', function() {
     });
 
 
-    it('raise when input0 and input1 are not 4-D tensors for "CONV_2D" operation', function() {
+    it('raise error when input0 and input1 are not 4-D tensors for "CONV_2D" operation', function() {
       return nn.createModel(options).then((model)=>{
         model.addOperand({type: nn.TENSOR_FLOAT32, dimensions: [32, 32, 3]});
         model.addOperand({type: nn.TENSOR_FLOAT32, dimensions: [5, 5, 3]});
@@ -2663,7 +2663,7 @@ describe('Unit Test/Model Test', function() {
       });
     });
 
-    it('raise when input0 and input1 are not 4-D tensors for "DEPTHWISE_CONV_2D" operation', function() {
+    it('raise error when input0 and input1 are not 4-D tensors for "DEPTHWISE_CONV_2D" operation', function() {
       return nn.createModel(options).then((model)=>{
         model.addOperand({type: nn.TENSOR_FLOAT32, dimensions: [32, 32, 3]});
         model.addOperand({type: nn.TENSOR_FLOAT32, dimensions: [5, 5, 3]});
@@ -3346,7 +3346,7 @@ describe('Unit Test/Model Test', function() {
       });
     });
 
-    it('raise when input0 and input1 are not 4-D tensors for "ATROUS_CONV_2D" operation', function() {
+    it('raise error when input0 and input1 are not 4-D tensors for "ATROUS_CONV_2D" operation', function() {
       return nn.createModel(options).then((model)=>{
         model.addOperand({type: nn.TENSOR_FLOAT32, dimensions: [32, 32, 3]});
         model.addOperand({type: nn.TENSOR_FLOAT32, dimensions: [5, 5, 3]});
@@ -3955,7 +3955,7 @@ describe('Unit Test/Model Test', function() {
       });
     });
 
-    it('raise when input0 and input1 are not 4-D tensors for "ATROUS_DEPTHWISE_CONV_2D" operation', function() {
+    it('raise error when input0 and input1 are not 4-D tensors for "ATROUS_DEPTHWISE_CONV_2D" operation', function() {
       return nn.createModel(options).then((model)=>{
         model.addOperand({type: nn.TENSOR_FLOAT32, dimensions: [32, 32, 3]});
         model.addOperand({type: nn.TENSOR_FLOAT32, dimensions: [5, 5, 3]});
