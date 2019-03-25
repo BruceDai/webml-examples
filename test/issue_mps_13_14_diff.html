@@ -1,0 +1,36 @@
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>WebML Polyfill | Mocha Tests</title>
+    <link href="static/mocha/3.0.2/mocha.css" rel="stylesheet" />
+  </head>
+  <body>
+    <div id="mocha"></div>
+    <script src="cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="cdnjs.cloudflare.com/ajax/libs/mocha/4.0.1/mocha.min.js"></script>
+    <script src="cdnjs.cloudflare.com/ajax/libs/chai/4.1.2/chai.min.js"></script>
+    <script src="cdnjs.cloudflare.com/ajax/libs/fetch/2.0.3/fetch.min.js"></script>
+    <script src="../dist/webml-polyfill.js"></script>
+    <script src="./utils.js"></script>
+    <script>
+      window.onload = setOptions;
+    </script>
+    <script>
+      mocha.setup('bdd');
+    </script>
+    <script src="./cts/cts/test/V1_0/avg_pool_float_3.js"></script>
+    <script src="./cts/cts/test/V1_0/fully_connected_float.js"></script>
+    <script src="./cts/cts/test/V1_0/fully_connected_float_2.js"></script>
+    <script src="./cts/cts/test/V1_0_plus/fully_connected_float_relu.js"></script>
+    <script src="./cts/cts/test/V1_0_plus/fully_connected_float_relu6.js"></script>
+    <script src="./cts/cts/test/V1_0/fully_connected_float_weights_as_inputs.js"></script>
+    <script src="./cts/cts/test/V1_0/max_pool_float_2.js"></script>
+    <script src="./cts/cts/test/V1_0_plus/maximum.js"></script>
+    <script src="./cts/cts/test/V1_0_plus/maximum_4d.js"></script>
+    <script src="./cts/cts/test/V1_0/mul.js"></script>
+    <script>
+      mocha.globals(['jQuery']);
+      mocha.run();
+    </script>
+  </body>
+</html>
