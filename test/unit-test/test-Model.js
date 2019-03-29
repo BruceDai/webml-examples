@@ -6493,6 +6493,7 @@ describe('Unit Test/Model Test', function() {
         });
       });
     });
+  });
 
   describe('#identifyInputsAndOutputs API', function() {
     it('check "identifyInputsAndOutputs" is a function', function() {
