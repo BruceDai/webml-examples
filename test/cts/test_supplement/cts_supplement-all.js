@@ -3721,7 +3721,7 @@ describe('CTS Supplement Test', function() {
     for (let i = 0; i < type4_length; ++i) {
       assert.isTrue(almostEqualCTS(op3_output[i], op3_expect[i]));
     }
-  }).timeout(50000);
+  }).timeout(500000);
 
   it('check result for Depthwise conv 28x28 input0 5x5 weights example', async function() {
     let model = await nn.createModel(options);
